@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import com.comcast.crm.generic.fileutility.FileUtility;
 import com.comcast.crm.generic.webdriverutility.WebDriverUtility;
 
 /**
@@ -24,19 +25,24 @@ public class LoginPage extends WebDriverUtility{                              //
 		 PageFactory.initElements(driver, this);
 	 }
 	                           
-	@FindBy(name="user_name")                        // Rule-2 Object Creation
-	private WebElement usernameEdt;
+	@FindBy(xpath = "//input[@id='exampleInputEmail1']")                        // Rule-2 Object Creation
+	private WebElement useremailEdt;
 	
-	@FindBy(name="user_password")
+	@FindBy(xpath = "//input[@id='exampleInputPassword1']")
 	private WebElement passwordEdt;
 	
-	@FindBy(id = "submitButton")
+	@FindBy(xpath = "//button[text()='Login']")
 	private WebElement loginBtn;
 	     
-	
+	@FindBy(xpath = "//a[text()='Login']")
+	private WebElement loginlink;
 	                                             
-	public WebElement getUsernameEdt() {            //Rule-4 : Object Encapsulation
-		return usernameEdt;                        //Rule-5 : Object Utilization
+	public WebElement getLoginlink() {
+		return loginlink;
+	}
+
+	public WebElement getuseremailEdt() {            //Rule-4 : Object Encapsulation
+		return useremailEdt;                        //Rule-5 : Object Utilization
 	}
 
 	public WebElement getPasswordEdt() {
@@ -52,14 +58,18 @@ public class LoginPage extends WebDriverUtility{                              //
  * @param url
  * @param username
  * @param password
+ * @throws Throwable 
  */
-	 public void loginToapp(String url , String username , String password) {
+	 public void loginToapp() throws Throwable {
 		 waitForPageToLoad(driver);
-		 driver.get(url);	
+		 FileUtility fu = new FileUtility();
+		 driver.get(fu.getDataFromPropertiesFile("url"));	
 		// driver.manage().window().maximize();
-		 usernameEdt.sendKeys(username);
-		 passwordEdt.sendKeys(password);
+		 loginlink.click();
+		 useremailEdt.sendKeys(fu.getDataFromPropertiesFile("username"));
+		 passwordEdt.sendKeys(fu.getDataFromPropertiesFile("password"));
 		 loginBtn.click();
+		
 	 }
 	
 	

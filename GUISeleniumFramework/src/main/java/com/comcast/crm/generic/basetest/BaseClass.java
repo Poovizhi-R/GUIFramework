@@ -15,23 +15,26 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Listeners;
 
 import com.comcast.crm.generic.databaseutlity.DataBaseUtility;
 import com.comcast.crm.generic.fileutility.ExcelUtility;
 import com.comcast.crm.generic.fileutility.FileUtility;
 import com.comcast.crm.generic.webdriverutility.JavaUtility;
 import com.comcast.crm.generic.webdriverutility.UtilityClassObject;
+import com.comcast.crm.generic.webdriverutility.WebDriverUtility;
 import com.comcast.crm.objectrepositoryutility.Home;
 import com.comcast.crm.objectrepositoryutility.LoginPage;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-
+@Listeners(com.comcast.crm.generic.listenerutility.ListImpClass.class)
 public class BaseClass {
 	/* Create Object */
 	public DataBaseUtility dbLib = new DataBaseUtility();
 	public FileUtility fLib = new FileUtility();
 	public ExcelUtility eLib = new ExcelUtility();
 	public JavaUtility jLib = new JavaUtility();
+	public WebDriverUtility wlib=new WebDriverUtility();
 	public  WebDriver driver = null;
 	public  static WebDriver sdriver = null;
 
@@ -79,11 +82,14 @@ public class BaseClass {
 	    @BeforeMethod(groups = {"smokeTest", "regressionTest"})
 		public void configBM() throws Throwable {
 			System.out.println("=login=");
-			String URL = System.getProperty("url" ,fLib.getDataFromPropertiesFile("url") );
-			String USERNAME = System.getProperty("username" , fLib.getDataFromPropertiesFile("username"));
-			String PASSWORD = System.getProperty("password" , fLib.getDataFromPropertiesFile("password"));
+			String URL = System.getProperty(fLib.getDataFromPropertiesFile("url") );
+			LoginPage login=new LoginPage(driver);
+			login.getLoginlink();
+		String USERNAME = System.getProperty(fLib.getDataFromPropertiesFile("username"));
+		String PASSWORD = System.getProperty( fLib.getDataFromPropertiesFile("password"));
+			
 			LoginPage lp = new LoginPage(driver);
-			lp.loginToapp(URL, USERNAME, PASSWORD);
+			lp.loginToapp();
 		}
 	    
 	    
